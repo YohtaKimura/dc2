@@ -12,7 +12,6 @@ public class DigitalClockWindow extends JWindow implements ActionListener {
     private JMenuItem changeFontSizeMenu;
     private JMenuItem changeFontColorMenu;
     private JMenuItem changeBackgroundColorMenu;
-    private JMenuItem aboutMenu;
 
     public DigitalClockWindow(String title, SimpleDigitalClock panel) {
 //        super(title);
@@ -21,49 +20,46 @@ public class DigitalClockWindow extends JWindow implements ActionListener {
         // Frame configuration
         setLayout(new BorderLayout());
         addWindowListener(new ApplicationCloseAdapter());
-//        setResizable(false);
-        //setIgnoreRepaint(true);
         getContentPane().add(panel);
 
         // Menu configuration
-        JMenuBar menuBar = new JMenuBar();
-        // [View]
         this.popup = new JPopupMenu();
-        JMenu viewMenu = new JMenu("View");
-//        viewMenu.setShortcut(new MenuShortcut('V'));
-        JMenuItem view = new JMenuItem("View");
-        this.popup.add(view);
-//        viewMenu.add(view);
-//        menuBar.add(viewMenu);
-        // [View] -> [Change font...]
-
-        changeFontMenu = new JMenuItem("Change font...");
-        changeFontMenu.addActionListener(this);
+        changeFontMenu = new JMenu("Change font...");
         this.popup.add(changeFontMenu);
-//        viewMenu.add(changeFontMenu);
-        // [View] -> [Change font size...]
-        changeFontSizeMenu = new JMenuItem("Change font size...");
-        changeFontSizeMenu.addActionListener(this);
+
+        changeFontSizeMenu = new JMenu("Change font size...");
+        ChangeFontSizeListener fontSizeListener = new ChangeFontSizeListener(this, this. panel);
+        for (int i = 10; i <= 250; i++) {
+	      if (i % 5 != 0)
+		  continue;
+	      JMenuItem item = new JMenuItem(Integer.toString(i));
+	      item.addActionListener(fontSizeListener);
+	      changeFontSizeMenu.add(item);
+	    }
+
         this.popup.add(changeFontSizeMenu);
-//        viewMenu.add(changeFontSizeMenu);
-        // [View] -> [Change font color...]
-        changeFontColorMenu = new JMenuItem("Change font color...");
-        changeFontColorMenu.addActionListener(this);
+        changeFontColorMenu = new JMenu("Change font color...");
+	    for (DisplayColor c : DisplayColor.values()) {
+	      JMenuItem item = new JMenuItem(c.toString());
+	      item.addActionListener(new ChangeForegroundListener(panel));
+	      changeFontColorMenu.add(item);
+	    }
         this.popup.add(changeFontColorMenu);
-//        viewMenu.add(changeFontColorMenu);
-        // [View] -> [Change background color...]
-        changeBackgroundColorMenu = new JMenuItem("Change background color...");
-        changeBackgroundColorMenu.addActionListener(this);
+
+        changeBackgroundColorMenu = new JMenu("Change background color...");
+        for (DisplayColor c : DisplayColor.values()) {
+	      JMenuItem item = new JMenuItem(c.toString());
+	      item.addActionListener(new ChangeBackgroundListener(panel));
+	      changeBackgroundColorMenu.add(item);
+	    }
         this.popup.add(changeBackgroundColorMenu);
-//        viewMenu.add(changeBackgroundColorMenu);
-        // [Help]
-//        JMenu helpMenu = new JMenu("Help");
-//        helpMenu.setShortcut(new MenuShortcut('H'));
-//        menuBar.add(helpMenu);
 
-//        setJMenuBar(menuBar);
-
-//        TODO: Shut down menu
+    // [Exit]
+        this.popup.addSeparator();
+        PopupMenuActionListener listener = new PopupMenuActionListener();
+        JMenuItem exitMenu = new JMenuItem("Exit");
+        exitMenu.addActionListener(listener);
+	    popup.add(exitMenu);
 //        this.popup.addSeparator();
 //        this.popup.add(new JMenuItem("SelectAll"));
 
@@ -135,3 +131,15 @@ public class DigitalClockWindow extends JWindow implements ActionListener {
             dialog.setVisible(false);
         }
     }
+
+    class PopupMenuActionListener implements ActionListener {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    Object source = e.getSource();
+//	    if (source.equals(exitMenu)) {
+		System.out.println();
+		System.exit(0);
+//	    } else if (source.equals(aboutMenu)) {
+//		new AboutDialog(null);
+	    }
+	}
