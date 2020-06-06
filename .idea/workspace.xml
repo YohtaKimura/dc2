@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a3077af9-5a8a-416f-8211-23ab4358fa48" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/dc2_3/ChangeBackgroundListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dc2_3/ChangeFontSizeListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dc2_3/ChangeForegroundListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dc2_3/DisplayColor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/dc2_3/ChangeFontListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
@@ -18,10 +15,7 @@
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/dc2_3/DialogCloseAdapter.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dc2_3/DialogCloseAdapter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/dc2_3/DigitalClockWindow$PopClickListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dc2_3/DigitalClockWindow$PopClickListener.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build/classes/java/main/dc2_3/DigitalClockWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dc2_3/DigitalClockWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dc2_3/JPopupMenuTest$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dc2_3/JPopupMenuTest$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/dc2_3/JPopupMenuTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/dc2_3/JPopupMenuTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dc2_3/DigitalClockWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dc2_3/DigitalClockWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dc2_3/TestPopUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dc2_3/TestPopUp.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -7,6 +7,8 @@ import java.awt.event.*;
 @SuppressWarnings("serial")
 public class DigitalClockWindow extends JWindow implements ActionListener {
     private SimpleDigitalClock panel;
+    private int pressedX;
+    private int pressedY;
     private JPopupMenu popup;
     private JMenuItem changeFontMenu;
     private JMenuItem changeFontSizeMenu;
@@ -24,11 +26,22 @@ public class DigitalClockWindow extends JWindow implements ActionListener {
 
         // Menu configuration
         this.popup = new JPopupMenu();
+        panel.addMouseListener(new ClockMouseAdapter(this.popup));
+      	panel.addMouseMotionListener(new ClockMouseMotionAdapter());
+
+
         changeFontMenu = new JMenu("Change font...");
         this.popup.add(changeFontMenu);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	    for (Font f : ge.getAllFonts()) {
+	        JMenuItem item = new JMenuItem(f.getName());
+	        item.addActionListener(new ChangeFontListener(this, this.panel));
+	        changeFontMenu.add(item);
+	    }
+
 
         changeFontSizeMenu = new JMenu("Change font size...");
-        ChangeFontSizeListener fontSizeListener = new ChangeFontSizeListener(this, this. panel);
+        ChangeFontSizeListener fontSizeListener = new ChangeFontSizeListener(this, this.panel);
         for (int i = 10; i <= 250; i++) {
 	      if (i % 5 != 0)
 		  continue;
@@ -107,6 +120,34 @@ public class DigitalClockWindow extends JWindow implements ActionListener {
             popup.show(e.getComponent(), e.getX(), e.getY());
         }
     }
+
+    private class ClockMouseMotionAdapter extends MouseMotionAdapter {
+	    @Override
+	    public void mouseDragged(MouseEvent e) {
+	        setLocation(getX() + e.getX() - pressedX, getY() + e.getY() - pressedY);
+    	}
+    }
+
+    private class ClockMouseAdapter extends MouseAdapter {
+	final JPopupMenu popupMenu;
+
+	public ClockMouseAdapter(JPopupMenu popupMenu) {
+	    this.popupMenu = popupMenu;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	    pressedX = e.getX();
+	    pressedY = e.getY();
+	    if (e.isPopupTrigger())
+		popupMenu.show(panel, e.getX(), e.getY());
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	    mousePressed(e);
+	}
+    }
 }
 
     class ApplicationCloseAdapter extends WindowAdapter {
@@ -143,3 +184,4 @@ public class DigitalClockWindow extends JWindow implements ActionListener {
 //		new AboutDialog(null);
 	    }
 	}
+
