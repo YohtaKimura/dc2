@@ -1,0 +1,194 @@
+package dc2_4;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+@SuppressWarnings("serial")
+public class DigitalClockFrame extends JFrame implements ActionListener {
+    private SimpleDigitalClock panel;
+    private int pressedX;
+    private int pressedY;
+    private JPopupMenu popup;
+    private JMenuItem changeFontMenu;
+    private JMenuItem changeFontSizeMenu;
+    private JMenuItem changeFontColorMenu;
+    private JMenuItem changeBackgroundColorMenu;
+
+    public DigitalClockFrame(String title, SimpleDigitalClock panel) {
+//        super(title);
+        this.panel = panel;
+
+        // Frame configuration
+        setLayout(new BorderLayout());
+        addWindowListener(new ApplicationCloseAdapter());
+        getContentPane().add(panel);
+
+        setJMenuBar(new DigitalClockMenu(this, panel));
+
+        // Menu configuration
+        this.popup = new JPopupMenu();
+        panel.addMouseListener(new ClockMouseAdapter(this.popup));
+      	panel.addMouseMotionListener(new ClockMouseMotionAdapter());
+
+
+        changeFontMenu = new JMenu("Change font...");
+        this.popup.add(changeFontMenu);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	    for (Font f : ge.getAllFonts()) {
+	        JMenuItem item = new JMenuItem(f.getName());
+	        item.addActionListener(new ChangeFontListener(this, this.panel));
+	        changeFontMenu.add(item);
+	    }
+
+        changeFontSizeMenu = new JMenu("Change font size...");
+        ChangeFontSizeListener fontSizeListener = new ChangeFontSizeListener(this, this.panel);
+        for (int i = 10; i <= 250; i++) {
+	      if (i % 5 != 0)
+		  continue;
+	      JMenuItem item = new JMenuItem(Integer.toString(i));
+	      item.addActionListener(fontSizeListener);
+	      changeFontSizeMenu.add(item);
+	    }
+
+        this.popup.add(changeFontSizeMenu);
+        changeFontColorMenu = new JMenu("Change font color...");
+	    for (DisplayColor c : DisplayColor.values()) {
+	      JMenuItem item = new JMenuItem(c.toString());
+	      item.addActionListener(new ChangeForegroundListener(panel));
+	      changeFontColorMenu.add(item);
+	    }
+        this.popup.add(changeFontColorMenu);
+
+        changeBackgroundColorMenu = new JMenu("Change background color...");
+        for (DisplayColor c : DisplayColor.values()) {
+	      JMenuItem item = new JMenuItem(c.toString());
+	      item.addActionListener(new ChangeBackgroundListener(panel));
+	      changeBackgroundColorMenu.add(item);
+	    }
+        this.popup.add(changeBackgroundColorMenu);
+
+    // [Exit]
+        this.popup.addSeparator();
+        PopupMenuActionListener listener = new PopupMenuActionListener();
+        JMenuItem exitMenu = new JMenuItem("Exit");
+        exitMenu.addActionListener(listener);
+	    popup.add(exitMenu);
+//        this.popup.addSeparator();
+//        this.popup.add(new JMenuItem("SelectAll"));
+
+        getContentPane().addMouseListener(new PopClickListener(this.popup));
+
+        pack();
+        Point location = Dc2_4.getConfiguration().getLocation();
+        if (location == null)
+            setLocationRelativeTo(null);
+        else
+            setLocation(location);
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source.equals(changeFontMenu)) {
+            new ChangeFontDialog(this, panel);
+        } else if (source.equals(changeFontSizeMenu)) {
+            new ChangeFontSizeDialog(this, panel);
+        } else if (source.equals(changeFontColorMenu)) {
+            new ChangeFontColorDialog(this, panel);
+        } else if (source.equals(changeBackgroundColorMenu)) {
+            new ChangeBackgroundColorDialog(this, panel);
+        }
+    }
+
+    void resize() {
+        pack();
+    }
+
+    class PopClickListener extends MouseAdapter {
+        private final JPopupMenu popup;
+        PopClickListener(JPopupMenu popup) {
+            this.popup = popup;
+        }
+        public void mousePressed(MouseEvent e) {
+            if (e.isPopupTrigger())
+                doPop(e);
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger())
+                doPop(e);
+        }
+
+        private void doPop(MouseEvent e) {
+            popup.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
+
+    private class ClockMouseMotionAdapter extends MouseMotionAdapter {
+	    @Override
+	    public void mouseDragged(MouseEvent e) {
+	        setLocation(getX() + e.getX() - pressedX, getY() + e.getY() - pressedY);
+    	}
+    }
+
+    private class ClockMouseAdapter extends MouseAdapter {
+	final JPopupMenu popupMenu;
+
+	public ClockMouseAdapter(JPopupMenu popupMenu) {
+	    this.popupMenu = popupMenu;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	    pressedX = e.getX();
+	    pressedY = e.getY();
+	    if (e.isPopupTrigger())
+		popupMenu.show(panel, e.getX(), e.getY());
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	    mousePressed(e);
+	}
+    }
+
+class ApplicationCloseAdapter extends WindowAdapter {
+    @Override
+    public void windowClosing(WindowEvent e) {
+        Dc2_4.getConfiguration().update(getLocation(), getWidth(), getHeight());
+        System.exit(0);
+    }
+}
+
+
+    class PopupMenuActionListener implements ActionListener {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	    Object source = e.getSource();
+//	    if (source.equals(exitMenu)) {
+		System.out.println();
+		System.exit(0);
+//	    } else if (source.equals(aboutMenu)) {
+//		new AboutDialog(null);
+	    }
+	}
+}
+
+    /**
+     * Window adapter for the dialog closing.
+     */
+    class DialogCloseAdapter extends WindowAdapter {
+        Dialog dialog;
+
+        public DialogCloseAdapter(Dialog dialog) {
+            this.dialog = dialog;
+        }
+
+        @Override
+        public void windowClosing(WindowEvent e) {
+            dialog.setVisible(false);
+        }
+    }
+
